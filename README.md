@@ -1,4 +1,4 @@
 # hesabres
 ----
 ### Todo
-[ Menu item management ]
+[] Menu item management
