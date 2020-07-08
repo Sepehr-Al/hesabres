@@ -1,0 +1,75 @@
+{% extends '../pure.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!-- Page Heading -->
+
+<h1 class="h3 mb-2 text-gray-800">{% trans 'Add menu' %}</h1>
+<p class="mb-4"></p>
+
+
+
+
+
+
+
+
+<div class="card shadow mb-4">
+       <div class="card-header py-3">
+             <h6 class="m-0 font-weight-bold text-primary">
+		{% trans 'Add item to the menu' %}                  
+             </h6>
+       </div>
+       <div class="card-body">
+
+
+{% if messages %}
+{% for message in messages %}
+<div class="card mb-4 py-3 border-left-{% if message.tags == 'success' %}success{% endif %}">
+	<div class="card-body">
+		{{ message }}
+	</div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+<form class="needs-validation" method="POST" >
+{% csrf_token %}
+ <div class="form-row">
+
+{% for field in form %}
+
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip01">{{ field.label }}</label>
+	{% if field.errors %}
+	{{ field|add_class:'is-invalid' }}
+	<div class="invalid-feedback">
+		{{ field.errors }}
+	</div>
+	{% else %}
+	{{ field }}
+	{% endif %}
+    </div>
+{% endfor %}
+  </div>
+
+
+<input type="submit" value="{% trans 'Submit' %}" class="btn btn-primary">
+</form>
+
+
+
+
+
+
+       </div>
+</div>
+
+
+
+{% endblock %}
+
+
+
