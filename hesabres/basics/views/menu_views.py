@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.http import JsonResponse
 from django.core.serializers import serialize
+import json
 # Add function in menu views
 # _ is for the translation
 def add(request):
@@ -26,12 +27,15 @@ def add(request):
 
 def index(request):
     data = Menu.objects.all()
-    return render(request, 'menu/index.html', {'data':data})
+    form = addMenuForm()
+    return render(request, 'menu/index.html', {'data':data, 'edit_form': form})
 
 
-
+# This function has bug 
 def edit_menu_item(request):
     id = request.POST['item_id']
-    # The below line has error !!!
-    edit_item_data = serialize('json', Menu.objects.get(pk=id))
-    return JsonResponse(edit_item_data, safe=False)
+    item = Menu.objects.get(pk=id)
+    item = '{"name": %s, "price": %s}'.format(item.name, item.price)
+    asJson = json.dumps(item)   
+    edit_item_data = serialize('json', [asJson])
+    return JsonResponse(asJson, safe=False)
