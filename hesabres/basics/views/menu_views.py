@@ -3,6 +3,8 @@ from basics.forms import addMenuForm
 from basics.models import Menu
 from django.contrib import messages
 from django.utils.translation import gettext as _
+from django.http import JsonResponse
+from django.core.serializers import serialize
 # Add function in menu views
 # _ is for the translation
 def add(request):
@@ -23,5 +25,13 @@ def add(request):
 
 
 def index(request):
-    return render(request, 'menu/index.html')
+    data = Menu.objects.all()
+    return render(request, 'menu/index.html', {'data':data})
 
+
+
+def edit_menu_item(request):
+    id = request.POST['item_id']
+    # The below line has error !!!
+    edit_item_data = serialize('json', Menu.objects.get(pk=id))
+    return JsonResponse(edit_item_data, safe=False)

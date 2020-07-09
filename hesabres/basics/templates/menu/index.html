@@ -20,14 +20,66 @@
 	            </div>
        <div class="card-body">
 
-
-
-       </div>
+  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>{% trans 'Name' %}</th>
+                      <th>{% trans 'Price' %}</th>
+		      <th>{% trans 'Actions' %}</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>{% trans 'Name' %}</th>
+                      <th>{% trans 'Price' %}</th>
+		      <th>{% trans 'Actions' %}</th>
+                   </tr>
+                  </tfoot>
+                  <tbody>
+{% for item in data %}
+                    <tr>
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.price }}</td>
+		      <td>
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</a>
+  <a class="btn btn-outline-secondary" item_id="{{ item.id }}" id="edit_item_{{ item.id }}"><i class="far fa-edit"></i> {% trans 'Edit' %}</a>
 </div>
+</td>
+                    </tr>
+{% endfor %}
+                  </tbody>
+                </table>
+<div>
+</div>
+{{ edit_item.name }}
+{% endblock %}
 
 
 
+{% block javascript %}
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$("[id^=edit_item_]").click(function(){
+	var item_id = $(this).attr('item_id')
+	var token = '{{ csrf_token }}';
+	var edit_request = $.ajax({
+		headers: { "X-CSRFToken": token },
+		url: "{% url 'manage_menu_edit' %}",
+		method: "POST",
+		data: {"item_id": item_id},
+		dataType: "json"
+	});
+	
+	edit_request.done(function(){
+		alert(123)
+	});
 
+	edit_request.success(function(edit_item_data){
+		alert(edit_item_data);
+	});
+});
 
+</script>
 
 {% endblock %}
