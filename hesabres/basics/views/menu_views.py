@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse, redirect
 from basics.forms import addMenuForm
+from django import shortcuts
 from basics.models import Menu
 from django.contrib import messages
 from django.utils.translation import gettext as _
@@ -31,11 +32,20 @@ def index(request):
     return render(request, 'menu/index.html', {'data':data, 'edit_form': form})
 
 
-# This function has bug 
+# This function has bug
 def edit_menu_item(request):
-    id = request.POST['item_id']
-    item = Menu.objects.get(pk=id)
-    item = '{"name": %s, "price": %s}'.format(item.name, item.price)
-    asJson = json.dumps(item)   
-    edit_item_data = serialize('json', [asJson])
-    return JsonResponse(asJson, safe=False)
+    if request.method == 'POST':
+        id = request.POST.get('item_id')
+        #item = Menu.objects.get(pk=id)
+        item = shortcuts.get_object_or_404(Menu, pk=id)
+        edit_item_data = serialize('json', [ item ] )
+        return JsonResponse(edit_item_data, safe=False)
+    else :
+        return redirect('manage_menu_index')
+
+
+
+
+
+
+

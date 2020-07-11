@@ -13,7 +13,6 @@ class addMenuForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({
             'class' : 'form-control',
-            'id' : 'validationTooltip01',
             'placeholder' : _('American Pizza'),
             'required' : 'true',
             'name' : 'name',

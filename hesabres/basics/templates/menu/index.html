@@ -43,7 +43,7 @@
 		      <td>
 <div class="btn-group" role="group" aria-label="Basic example">
   <a class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</a>
-  <a class="btn btn-outline-secondary" item_id="{{ item.id }}" id="edit_item_{{ item.id }}"><i class="far fa-edit"></i> {% trans 'Edit' %}</a>
+  <a class="btn btN-outline-secondary" item_id="{{ item.id }}" id="edit_item_{{ item.id }}"><i class="far fa-edit"></i> {% trans 'Edit' %}</a>
 </div>
 </td>
                     </tr>
@@ -54,6 +54,7 @@
 </div>
 
 <!-- Modal -->
+	<form method="POST" id="edit_item_form">
 <div class="modal fade" id="edit_item_modal" tabindex="-1" role="dialog"  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -64,7 +65,7 @@
         </button>
       </div>
       <div class="modal-body">
-	<form method="POST" id="edit_item_form">
+
 	{% csrf_token %}
 	
 {% for field in edit_form %}
@@ -77,12 +78,12 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <input type="submit" class="btn btn-primary" value="{% trans 'Submit' %}">
-	</form>
+	
       </div>
     </div>
   </div>
 </div>
-
+</form>
 
 
 
@@ -92,8 +93,8 @@
 
 {% block javascript %}
 <script type="text/javascript">
+$(document).ready(function(){
 $("[id^=edit_item_]").click(function(){
-
 	var item_id = $(this).attr('item_id')
 	var token = '{{ csrf_token }}';
 	var edit_request = $.ajax({
@@ -103,17 +104,23 @@ $("[id^=edit_item_]").click(function(){
 		data: {"item_id": item_id},
 		dataType: "json"
 	});
-	
 	edit_request.done(function(data){
-		console.log(data)
-		$("#edit_item_modal_title").html(data.fields[0].name);
-
+		var dataObj = JSON.parse(data);
+		$("#edit_item_modal_title").html("{% trans 'Editing' %}: "+dataObj[0].fields.name);
+		$("input#id_name").attr('value',dataObj[0].fields.name);
+		$("input#id_price").attr('value',dataObj[0].fields.price);
 	});
-
-	
 	$("#edit_item_modal").modal("show");
 });
 
+	$("#edit_item_form input[type=submit]").click(function(){
+
+		alert(123);
+
+	});
+
+
+});
 </script>
 
 {% endblock %}
